@@ -32,7 +32,13 @@ const REST = require('../route/rest');
 const PGP = require('../service/pgp');
 const PublicKey = require('../service/public-key');
 
+const errorHandler = require('koa-better-error-handler');
+const koa404Handler = require('koa-404-handler');
+
 const app = new Koa();
+
+app.context.onerror = errorHandler();
+app.use(koa404Handler);
 
 render(app, {
   root: path.join(__dirname, '../view')
