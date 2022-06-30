@@ -24,7 +24,7 @@ const init = require('./app');
 (async () => {
   try {
     const app = await init();
-    app.listen(config.server.port);
+    app.listen(config.server.port, '::1');
     log.info('app', `Listening on http://localhost:${config.server.port}`);
   } catch (err) {
     log.error('app', 'Initialization failed!', err);
