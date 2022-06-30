@@ -1,7 +1,8 @@
-Mailvelope Keyserver [![Build Status](https://travis-ci.org/mailvelope/keyserver.svg?branch=master)](https://travis-ci.org/mailvelope/keyserver)
+SUSE Keyserver
 ==============
 
 A simple OpenPGP public key server that validates email address ownership of uploaded keys.
+This is a fork of the [Mailvelope Keyserver](https://github.com/mailvelope/keyserver).
 
 
 
