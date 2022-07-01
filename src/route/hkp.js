@@ -81,7 +81,7 @@ class HKP {
     if (['get', 'index', 'vindex'].indexOf(params.op) === -1) {
       ctx.throw(501, 'Not implemented (Code: 0x01)!');
     } else if (!params.keyId && !params.fingerprint && !params.email) {
-      ctx.throw(501, 'Invalid query - use key ID format \`0xlong\` or an email address.');
+      ctx.throw(501, 'Invalid query - use a key ID, fingerprint or email address.');
     }
 
     return params;
