@@ -1,0 +1,16 @@
+[Unit]
+Description=Keyserver
+Wants=network.target mongod.service
+After=mongod.service
+
+[Service]
+WorkingDirectory=/opt/keyserver
+User=keyserver
+Group=keyserver
+EnvironmentFile=-/etc/opt/keyserver/environment
+ExecStart=node index.js
+ProtectSystem=strict
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
