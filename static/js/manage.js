@@ -42,7 +42,7 @@
       if (xhr.status === 304) {
         alert('addKey', 'danger', 'Key already exists!');
       } else {
-        alert('addKey', 'success', JSON.parse(xhr.responseText).message);
+        alert('addKey', 'success', xhr.responseText);
       }
     })
     .fail(function(xhr) {
@@ -60,7 +60,7 @@
       method: 'DELETE',
       url: '/api/v1/key?email=' + encodeURIComponent(email)
     }).done(function(data, textStatus, xhr) {
-      alert('removeKey', 'success', JSON.parse(xhr.responseText).message);
+      alert('removeKey', 'success', xhr.responseText);
     })
     .fail(function(xhr) {
       alert('removeKey', 'danger', JSON.parse(xhr.responseText).message);
