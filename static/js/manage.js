@@ -24,8 +24,7 @@
       }
     })
     .fail(function(xhr) {
-      console.log('status is: ' + xhr.status);
-      alert('getKey', 'danger', xhr.responseText);
+      alert('getKey', 'danger', JSON.parse(xhr.responseText).message);
     });
   });
 
@@ -43,11 +42,11 @@
       if (xhr.status === 304) {
         alert('addKey', 'danger', 'Key already exists!');
       } else {
-        alert('addKey', 'success', xhr.responseText);
+        alert('addKey', 'success', JSON.parse(xhr.responseText).message);
       }
     })
     .fail(function(xhr) {
-      alert('addKey', 'danger', xhr.responseText);
+      alert('addKey', 'danger', JSON.parse(xhr.responseText).message);
     });
   });
 
@@ -61,10 +60,11 @@
       method: 'DELETE',
       url: '/api/v1/key?email=' + encodeURIComponent(email)
     }).done(function(data, textStatus, xhr) {
-      alert('removeKey', 'success', xhr.responseText);
+      alert('removeKey', 'success', JSON.parse(xhr.responseText).message);
     })
     .fail(function(xhr) {
-      alert('removeKey', 'danger', xhr.responseText);
+      alert('removeKey', 'danger', JSON.parse(xhr.responseText).message);
+      console.log(xhr);
     });
   });
 
