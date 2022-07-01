@@ -4,8 +4,17 @@
 	
   <div class="row marketing">
 
-    <div class="col-lg-12">
+    <div id="getKey" class="col-lg-12">
       <h3>Key lookup</h3>
+      <div class="alert alert-success hidden" role="alert">
+        <strong>Success!</strong> <span></span>
+      </div>
+      <div class="alert alert-danger hidden" role="alert">
+        <strong>Error!</strong> <span></span>
+      </div>
+      <div class="progress hidden">
+        <div class="progress-bar progress-bar-striped active" role="progressbar"></div>
+      </div>
       <form action="/pks/lookup" method="get">
         <input class="hidden" type="radio" name="op" value="get" checked="checked">
         <div class="input-group input-group-lg">

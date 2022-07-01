@@ -5,6 +5,30 @@
 
   $('.progress-bar').css('width', '100%');
 
+  // GET key form
+  $('#getKey form').submit(function(e) {
+    e.preventDefault();
+    $('#getKey .alert').addClass('hidden');
+    $('#getKey .progress').removeClass('hidden');
+    var query = encodeURIComponent($('#getKey input[type="text"]').val());
+    var url = '/pks/lookup?op=get&search=' + query;
+    console.log('query is: ' + query);
+    $.ajax({
+      method: 'GET',
+      url: url
+    }).done(function(data, textStatus, xhr) {
+      console.log('status is: ' + xhr.status);
+      if (xhr.status === 200) {
+        alert('getKey', 'success', 'Found a result, redirecting ...');
+	window.location=url;
+      }
+    })
+    .fail(function(xhr) {
+      console.log('status is: ' + xhr.status);
+      alert('getKey', 'danger', xhr.responseText);
+    });
+  });
+
   // POST key form
   $('#addKey form').submit(function(e) {
     e.preventDefault();
