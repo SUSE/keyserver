@@ -18,6 +18,11 @@
       </tbody>
       </table>
       </p>
+      <% if (! query.keyId) { %>
+      <p><b>Key ID (long):</b>
+      <pre><%= key.keyId %></pre>
+      </p>
+      <% } %>
       <p><b>Fingerprint:</b>
       <pre><%= key.fingerprint %></pre>
       </p>
