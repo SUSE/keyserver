@@ -3,7 +3,7 @@
 ## Type: string
 ## Default: "production"
 #
-# This should always be set to "production".
+# This should always be set to "production"
 #
 NODE_ENV="production"
 
@@ -17,35 +17,21 @@ LOG_LEVEL="info"
 ## Type: integer
 ## Default: 8085
 #
-# Port for the Node Express server to listen on
+# Port for the HTTP server to listen on
 #
 PORT=8085
 
 ## Type: boolean
 ## Default: true
 #
-# Automatically upgrade HTTPS requests to HTTP?
+# Whether HTTP requests should be automatically directed to HTTPS
 #
 HTTPS_UPGRADE=true
 
 ## Type: string
-## Default: base64_encoded_sha256
-#
-# TO-DO: EXPLAIN WHAT THIS DOES
-#
-HTTPS_KEY_PIN="base64_encoded_sha256"
-
-## Type: string
-## Default: base64_encoded_sha256
-#
-# TO-DO: EXPLAIN WHAT THIS DOES
-#
-HTTPS_KEY_PIN_BACKUP="base64_encoded_sha256"
-
-## Type: string
 ## Default: "127.0.0.1:27017/keyserver"
 #
-# MongoDB connection URI in the format <host>:<port>/<database>
+# MongoDB connection URI in the format "<host>:<port>/<database>"
 #
 MONGO_URI="127.0.0.1:27017/keyserver"
 
@@ -89,7 +75,7 @@ SMTP_TLS=false
 ## Default: false
 #
 # Whether to use STARTTLS for connection to the server specified with SMTP_HOST
-# Not comatible with SMTP_TLS!
+# Not compatible with SMTP_TLS!
 #
 SMTP_STARTTLS=false
 
