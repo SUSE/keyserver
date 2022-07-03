@@ -59,7 +59,16 @@ class PGP {
     try {
       await key.verifyPrimaryKey(verifyDate)
     } catch (myerror) {
-      util.throw(400, 'Invalid PGP key: primary key verification failed');
+      if (myerror.message === 'Primary key is expired') {
+          util.throw(400, 'Your key has expired, and we only accept valid keys for submission.');
+      }
+      else if (myerror.message === 'Primary key is revoked') {
+          util.throw(400, 'Your key is marked as revoked, and we only accept valid keys for submission.');
+      }
+      else {
+	  console.log(myerror);
+          util.throw(400, 'Key verification failed.');
+      }
     }
 
     // accept version 4 keys only
