@@ -5,4 +5,4 @@ confdir="/etc$bindir"
 set -a
 . "$confdir/environment"
 set +a
-sudo -Eu keyserver /usr/bin/npm run --prefix "$bindir" start
+sudo -Eu keyserver "$bindir/node_modules/.bin/supervisor" --watch "$bindir" -- "$bindir/index.js" --prefix "$bindir"
