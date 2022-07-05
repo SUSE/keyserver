@@ -42,7 +42,6 @@ class PGP {
     publicKeyArmored = this.trimKey(publicKeyArmored);
 
     const r = await openpgp.readKeys({armoredKeys: publicKeyArmored});
-    //const r = await openpgp.key.readArmored(publicKeyArmored);
     if (r.err) {
       const error = r.err[0];
       log.error('pgp', 'Failed to parse PGP key:\n%s', publicKeyArmored, error);
@@ -53,7 +52,6 @@ class PGP {
 
     // verify primary key
     const key = r[0];
-    //const primaryKey = key;
     const now = new Date();
     const verifyDate = key.created > now ? key.created : now;
     try {
@@ -168,7 +166,6 @@ class PGP {
   async filterKeyByUserIds(userIds, armored) {
     const emails = userIds.map(({email}) => email);
     const key = await openpgp.readKey({armoredKey: armored});
-    //const {keys: [key]} = r;
     key.users = key.users.filter(({userId}) => !userId || emails.includes(util.normalizeEmail(userId.email)));
     return key.armor();
   }
@@ -180,13 +177,17 @@ class PGP {
    * @return {String}            merged armored key block
    */
   async updateKey(srcArmored, dstArmored) {
-    const {keys: [srcKey], err: srcErr} = await openpgp.key.readArmored(srcArmored);
-    if (srcErr) {
+    let srcKey;
+    let dstKey;
+    try {
+      srcKey = await openpgp.readKey({armoredKey: srcArmored});
+    } catch (srcErr) {
       log.error('pgp', 'Failed to parse source PGP key for update:\n%s', srcArmored, srcErr);
       util.throw(500, 'Failed to parse PGP key');
     }
-    const {keys: [dstKey], err: dstErr} = await openpgp.key.readArmored(dstArmored);
-    if (dstErr) {
+    try {
+      dstKey = await openpgp.readKey({armoredKey: dstArmored});
+    } catch (dstErr) {
       log.error('pgp', 'Failed to parse destination PGP key for update:\n%s', dstArmored, dstErr);
       util.throw(500, 'Failed to parse PGP key');
     }
