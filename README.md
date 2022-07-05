@@ -2,9 +2,20 @@ SUSE Keyserver
 ==============
 
 A simple OpenPGP public key server that validates email address ownership of uploaded keys.
-This is a fork of the [Mailvelope Keyserver](https://github.com/mailvelope/keyserver).
+This is a fork of the [Mailvelope Keyserver](https://github.com/mailvelope/keyserver) - you can find the original README below.
 
+To install this keyserver for production on an SLES or openSUSE system, download and install the package from [OBS](https://build.opensuse.org/package/show/home:crameleon/keyserver) - TO-DO: move to dedicated project in OBS.
 
+To install this server for development purposes, clone the repository and execute:
+
+```
+npm i
+npm i supervisor
+./suse/suse-run-dev.sh
+```
+
+Mailvelope Keyserver
+==============
 
 ## Why not use Web of Trust?
 
