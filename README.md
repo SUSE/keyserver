@@ -14,6 +14,8 @@ npm i supervisor
 ./suse/suse-run-dev.sh
 ```
 
+![Application screenshot](screenshots/index.html.png?raw=true)
+
 Mailvelope Keyserver
 ==============
 
