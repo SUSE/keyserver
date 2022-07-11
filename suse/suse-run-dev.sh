@@ -1,4 +1,7 @@
 #!/bin/sh
+# Copyright (C) 2022 SUSE LLC
+# Author: Georg Pfuetzenreuter <georg.pfuetzenreuter@suse.com>
+
 set -e
 bindir="/opt/keyserver"
 confdir="/etc$bindir"

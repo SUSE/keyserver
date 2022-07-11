@@ -1,3 +1,8 @@
+# This file is part of the keyserver package
+#
+# Copyright (C) 2022 SUSE LLC
+# Author: Georg Pfuetzenreuter <georg.pfuetzenreuter@suse.com>
+
 ## Description: Keyserver Configuration
 
 ## Type: string

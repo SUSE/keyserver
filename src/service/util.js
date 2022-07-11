@@ -1,6 +1,7 @@
 /**
  * Mailvelope - secure email with OpenPGP encryption for Webmail
  * Copyright (C) 2016 Mailvelope GmbH
+ * Copyright (C) 2022 SUSE LLC
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License version 3
