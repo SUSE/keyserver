@@ -13,6 +13,7 @@ module.exports = {
 
   server: {
     port: process.env.PORT || 8888,
+    bind: process.env.BIND,
     httpsUpgrade: process.env.HTTPS_UPGRADE,
     httpsKeyPin: process.env.HTTPS_KEY_PIN,
     httpsKeyPinBackup: process.env.HTTPS_KEY_PIN_BACKUP
