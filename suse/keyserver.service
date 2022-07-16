@@ -8,7 +8,7 @@ User=keyserver
 Group=keyserver
 Environment=NODE_CONFIG_DIR=/etc/keyserver
 EnvironmentFile=-/etc/sysconfig/keyserver
-ExecStart=node /srv/www/keyserver/index.js
+ExecStart=/usr/bin/node /srv/www/keyserver/index.js
 ProtectSystem=strict
 PrivateTmp=true
 
