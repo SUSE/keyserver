@@ -19,14 +19,13 @@
 %define install_dir /srv/www/%{name}
 %define modules_dir node_modules
 Name:           keyserver
-Version:        1.1.1
+Version:        1.2
 Release:        0
 Summary:        Simple OpenPGP public key server
 License:        AGPL-3.0-only
 Group:          Productivity/Networking/Other
-#to-do: move to GitHub
-URL:            https://gitlab.suse.de/crameleon/keyserver
-Source0:        %{name}-v%{version}.tar.gz
+URL:            https://github.com/SUSE/keyserver
+Source0:        suse-v%{version}.tar.gz
 Source1:        node_modules.tgz
 Source2:        system-user-keyserver.conf
 Patch0:         suse-config.patch
@@ -44,21 +43,21 @@ This is a fork of the Mailvelope Keyserver.
 
 %prep
 %setup -q -b 1 -n %{modules_dir} -T
-%autosetup -D -n %{name}-v%{version} -p 1
+%autosetup -D -n %{name}-suse-v%{version} -p 1
 cd ..
-mv %{modules_dir} %{name}-v%{version}/
-rm %{name}-v%{version}/%{modules_dir}/form-data/README.md.bak
-find %{name}-v%{version}/%{modules_dir} -name '.*' -exec rm -r {} +
-find %{name}-v%{version}/%{modules_dir} -type f -exec sed -i -e '\?%{_bindir}/env node?d' -e '\?%{_bindir}/env sh?d' -e '\?%{_bindir}/env bash?d' {} + -exec chmod 644 {} +
+mv %{modules_dir} %{name}-suse-v%{version}/
+rm %{name}-suse-v%{version}/%{modules_dir}/form-data/README.md.bak
+find %{name}-suse-v%{version}/%{modules_dir} -name '.*' -exec rm -r {} +
+find %{name}-suse-v%{version}/%{modules_dir} -type f -exec sed -i -e '\?%{_bindir}/env node?d' -e '\?%{_bindir}/env sh?d' -e '\?%{_bindir}/env bash?d' {} + -exec chmod 644 {} +
 
 %build
 %sysusers_generate_pre %{SOURCE2} %{name}
 
 %install
 install -d %{buildroot}%{install_dir} %{buildroot}%{_fillupdir} %{buildroot}/%{_unitdir} %{buildroot}/%{_sbindir} %{buildroot}/%{_sysconfdir}/%{name} %{buildroot}%{_sysusersdir} %{buildroot}/%{_sysconfdir}/nginx/vhosts.d
-rsync -a locales node_modules static src %{buildroot}%{install_dir}
+rsync -a index.js locales node_modules static src %{buildroot}%{install_dir}
 install -v -m 644 %{SOURCE2} %{buildroot}%{_sysusersdir}
-install -v -m 644 config/default.js %{buildroot}%{_sysconfdir}/%{name}/config.js
+install -v -m 644 config/default.js %{buildroot}%{_sysconfdir}/%{name}/production.js
 install -v -m 644 suse/sysconfig %{buildroot}%{_fillupdir}/sysconfig.keyserver
 install -v -m 644 suse/%{name}.service %{buildroot}%{_unitdir}
 ln -s -f %{_sbindir}/service %{buildroot}%{_sbindir}/rc%{name}
@@ -80,7 +79,7 @@ install -v -m 644 suse/keyserver.conf %{buildroot}/%{_sysconfdir}/nginx/vhosts.d
 
 %files
 %license LICENSE
-%doc README.md Changelog.md
+%doc README.md
 %{install_dir}/
 %dir %{_sysconfdir}/%{name}/
 %dir %{_sysconfdir}/nginx
@@ -89,8 +88,7 @@ install -v -m 644 suse/keyserver.conf %{buildroot}/%{_sysconfdir}/nginx/vhosts.d
 %{_fillupdir}/sysconfig.%{name}
 %{_unitdir}/%{name}.service
 %{_sbindir}/rc%{name}
-%config(noreplace) %attr(0640,root,%{name}) %{_sysconfdir}/%{name}/config.js
+%config(noreplace) %attr(0640,root,%{name}) %{_sysconfdir}/%{name}/production.js
 %config(noreplace) %attr(0640,root,%{name}) %{_sysconfdir}/nginx/vhosts.d/%{name}.conf
 
 %changelog
-
