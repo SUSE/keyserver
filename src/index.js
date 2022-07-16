@@ -22,11 +22,14 @@ const log = require('winston');
 const config = require('config');
 const init = require('./app');
 
+//custom
+log.add(new log.transports.Console());
+
 (async () => {
   try {
     const app = await init();
-    app.listen(config.server.port, '::1');
-    log.info('app', `Listening on http://localhost:${config.server.port}`);
+    app.listen(config.server.port, config.server.bind);
+    log.info('app', `Listening on http://${config.server.bind}:${config.server.port}`);
   } catch (err) {
     log.error('app', 'Initialization failed!', err);
     throw err;

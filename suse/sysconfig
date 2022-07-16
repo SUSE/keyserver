@@ -26,6 +26,13 @@ LOG_LEVEL="info"
 #
 PORT=8085
 
+## Type: string
+## Default: ::1
+#
+# Address for the HTTP server to bind to
+#
+BIND="::1"
+
 ## Type: boolean
 ## Default: true
 #
