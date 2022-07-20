@@ -49,7 +49,6 @@ prepare () {
 
 
 setup () {
-
         set -- $mandatory_settings $optional_settings
 
         for setting
@@ -59,7 +58,6 @@ setup () {
         done
 
         "$sedbin" '-i' $construct "$config"
-        
 }
 
 init () {
