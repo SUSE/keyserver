@@ -36,10 +36,10 @@ spec:
               optional: false
         - name: SMTP_HOST
           # The SMTP server to use for outgoing email
-          value: hagrid00.suse.cz
+          value: ''
         - name: SENDER_EMAIL
           # The email address to send outgoing email from - make sure the beforementioned email server allows this
-          value: keyserver-gdev@suse.de
+          value: ''
         image: registry.opensuse.org/home/crameleon/gdev/containers/containerfile/gdev/sle-keyserver:latest
         imagePullPolicy: Always
         name: keyserver01
