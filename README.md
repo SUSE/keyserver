@@ -4,6 +4,11 @@ SUSE Keyserver
 A simple OpenPGP public key server that validates email address ownership of uploaded keys.
 This is a fork of the [Mailvelope Keyserver](https://github.com/mailvelope/keyserver) - you can find the original README below.
 
+#### Dependencies
+
+- _Required_: A MongoDB database with read/write access
+- _Recommended_: A reverse proxy
+
 #### Install for production
 
 To install this keyserver for production on an SLES or openSUSE system add the OBS repository and install the package:
@@ -21,7 +26,13 @@ https://download.opensuse.org/repositories/home:/crameleon:/keyserver/openSUSE_F
 zypper in keyserver
 ```
 
-After installation of the package you can configure the program by editing `/etc/sysconfig/keyserver` - you need to set at least the MongoDB connection details.
+After installation of the package you can configure the program by editing `/etc/sysconfig/keyserver`.
+
+The following options are mandatory:
+  - `MONGO_URI`
+  - `MONGO_USER`
+  - `MONGO_PASS`
+  - `SMTP_HOST`
 
 Then the server can be controlled using `systemd`:
 
