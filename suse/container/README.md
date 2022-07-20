@@ -1,0 +1,1 @@
+This containerfile is designed to be built with the Open Build Service. For local building, please remove the service variables and add a `zypper ar` call to install the repository containing the keyserver package.

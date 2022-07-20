@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keyserver
+  namespace: infra-keyserver
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+    spec:
+      affinity: {}
+      containers:
+      - env:
+        - name: MONGO_HOST
+          # The MongoDB database server for storing key data
+          # For a single MongoDB instance put a hostname in the format `host.example.com`
+          # For a MongoDB replica set put multiple hostnames comma separated in the format `replset-0.example.com,replset-1.example.com,replset-2.example.com`
+          value: ''
+        - name: MONGO_DB
+          # The MongoDB database name to store the `publickey` collection in
+          value: keyserver
+        - name: MONGO_USER
+          # The MongoDB username to authenticate with - the user should have "readWrite" access to the beforementioned database
+          value: ''
+        - name: MONGO_PASS
+          # The password to authenticate the beforementioned user with - this does not need to be fed from a secret, but I highly recommend it
+          valueFrom:
+            secretKeyRef:
+              key: MONGO_PASS
+              name: keyserver-dbsec
+              optional: false
+        - name: SMTP_HOST
+          # The SMTP server to use for outgoing email
+          value: ''
+        - name: SENDER_EMAIL
+          # The email address to send outgoing email from - make sure the beforementioned email server allows this
+          value: ''
+        image: registry.opensuse.org/home/crameleon/gdev/containers/containerfile/gdev/sle-keyserver:latest
+        imagePullPolicy: Always
+        name: keyserver01
+        ports:
+        - containerPort: 8085
+          name: http
+          protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
