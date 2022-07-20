@@ -18,7 +18,7 @@
 
 'use strict';
 
-const log = require('winston');
+const log = require('../app/log');
 const util = require('../service/util');
 const openpgp = require('openpgp');
 const nodemailer = require('nodemailer');
@@ -84,15 +84,17 @@ class Email {
   async _pgpEncrypt(plaintext, publicKeyArmored) {
     let key;
     try {
+        log.debug('E-Mail: Parsing armored key for message encryption: %s', publicKeyArmored);
         key = await openpgp.readKey({armoredKey: publicKeyArmored});
     } catch (err) {
-        log.error('email', 'Reading armored key failed.', err, publicKeyArmored);
+        log.error('E-Mail: Reading armored key failed: %s', err);
     }
     const now = new Date();
     // set message creation date if key has been created with future creation date
     const msgCreationDate = key.created > now ? key.created : now;
     const crypttext = await openpgp.createMessage({text: plaintext})
     try {
+      log.debug('E-Mail: Encrypting message ...');
       const ciphertext = await openpgp.encrypt({
         message: crypttext,
         encryptionKeys: key,
@@ -100,8 +102,7 @@ class Email {
       });
       return ciphertext;
     } catch (error) {
-      console.log(error);
-      log.error('email', 'Encrypting message failed.', error, publicKeyArmored);
+      log.error('E-Mail: Encrypting message failed: %s', error);
       util.throw(400, 'Encrypting message for verification email failed.', error);
     }
   }
@@ -115,11 +116,11 @@ class Email {
     try {
       const info = await this._transporter.sendMail(sendOptions);
       if (!this._checkResponse(info)) {
-        log.warn('email', 'Message may not have been received.', info);
+        log.warn('E-Mail: Message may not have been received: %s', info);
       }
       return info;
     } catch (error) {
-      log.error('email', 'Sending message failed.', error);
+      log.error('E-Mail: Sending message failed: %s', error);
       util.throw(500, 'Sending email to user failed');
     }
   }
