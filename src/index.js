@@ -18,20 +18,17 @@
 
 'use strict';
 
-const log = require('winston');
+const log = require('./app/log');
 const config = require('config');
 const init = require('./app');
-
-//custom
-log.add(new log.transports.Console());
 
 (async () => {
   try {
     const app = await init();
     app.listen(config.server.port, config.server.bind);
-    log.info('app', `Listening on http://${config.server.bind}:${config.server.port}`);
-  } catch (err) {
-    log.error('app', 'Initialization failed!', err);
-    throw err;
+    log.info('Listening on http://%s:%i', config.server.bind, config.server.port);
+  } catch (myerror) {
+    log.error('Initialization failed: ', myerror);
+    throw myerror;
   }
 })();

@@ -20,11 +20,7 @@
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
 const config = require('config');
-const log = require('winston');
-const papertrail = require('./src/dao/papertrail');
-
-log.level = config.log.level;
-papertrail.init(config.papertrail);
+const log = require('./src/app/log');
 
 //
 // Start worker cluster depending on number of CPUs
@@ -34,9 +30,9 @@ if (cluster.isMaster) {
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
-  cluster.on('fork', worker => log.info('cluster', `Forked worker #${worker.id} [pid:${worker.process.pid}]`));
+  cluster.on('fork', worker => log.info('Forked worker #%i with PID %i', worker.id, worker.process.pid));
   cluster.on('exit', worker => {
-    log.warn('cluster', `Worker #${worker.id} [pid:${worker.process.pid}] died`);
+    log.warn('Worker #%i with PID %i died', worker.id, worker.process.pid);
     cluster.fork();
   });
 } else {
@@ -48,16 +44,16 @@ if (cluster.isMaster) {
 //
 
 process.on('SIGTERM', () => {
-  log.warn('exit', 'Exited on SIGTERM');
+  log.warn('Exited on SIGTERM');
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  log.warn('exit', 'Exited on SIGINT');
+  log.warn('Exited on SIGINT');
   process.exit(0);
 });
 
 process.on('uncaughtException', err => {
-  log.error('index', 'Uncaught exception', err);
+  log.error('Uncaught exception: %s', err);
   process.exit(1);
 });
