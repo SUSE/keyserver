@@ -1,6 +1,7 @@
 /**
  * Mailvelope - secure email with OpenPGP encryption for Webmail
  * Copyright (C) 2016 Mailvelope GmbH
+ * Copyright (C) 2022 SUSE LLC
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License version 3
@@ -17,7 +18,7 @@
 
 'use strict';
 
-const log = require('winston');
+const log = require('../app/log');
 const util = require('./util');
 const openpgp = require('openpgp');
 
@@ -41,12 +42,14 @@ class PGP {
   async parseKey(publicKeyArmored) {
     publicKeyArmored = this.trimKey(publicKeyArmored);
 
+    log.debug('PGP: Parsing armored key: %s', publicKeyArmored);
     const r = await openpgp.readKeys({armoredKeys: publicKeyArmored});
     if (r.err) {
       const error = r.err[0];
-      log.error('pgp', 'Failed to parse PGP key:\n%s', publicKeyArmored, error);
+      log.error('PGP: Failed to parse key: %s', error);
       util.throw(500, 'Failed to parse PGP key');
     } else if (!r || r.length !== 1 || !r[0].keyPacket) {
+      log.debug('PGP: Attempt to upload more than one key.');
       util.throw(400, 'Invalid PGP key: only one key can be uploaded');
     }
 
@@ -58,13 +61,15 @@ class PGP {
       await key.verifyPrimaryKey(verifyDate)
     } catch (myerror) {
       if (myerror.message === 'Primary key is expired') {
+          log.debug('PGP: Attempt to upload an expired key.');
           util.throw(400, 'Your key has expired, and we only accept valid keys for submission.');
       }
       else if (myerror.message === 'Primary key is revoked') {
+          log.debug('PGP: Attempt to upload a revoked key.');
           util.throw(400, 'Your key is marked as revoked, and we only accept valid keys for submission.');
       }
       else {
-	  console.log(myerror);
+          log.error('PGP: Key verification error: %s', myerror);
           util.throw(400, 'Key verification failed.');
       }
     }
@@ -73,12 +78,14 @@ class PGP {
     const keyId = key.keyPacket.keyID.toHex();
     const fingerprint = key.getFingerprint();
     if (!util.isKeyId(keyId) || !util.isFingerPrint(fingerprint)) {
+      log.debug('PGP: Attempt to upload a non-v4 key.');
       util.throw(400, 'Invalid PGP key: only v4 keys are accepted');
     }
 
     // check for at least one valid user id
     const userIds = await this.parseUserIds(key.users, key.keyPacket, verifyDate);
     if (!userIds.length) {
+      log.debug('PGP: Attempt to upload a key with no valid UIDs.');
       util.throw(400, 'Invalid PGP key: invalid user IDs');
     }
 
@@ -105,6 +112,7 @@ class PGP {
    */
   trimKey(data) {
     if (!this.validateKeyBlock(data)) {
+      log.debug('PGP: Attempt to upload something that is no key block.');
       util.throw(400, 'Invalid PGP key: key block not found');
     }
     return KEY_BEGIN + data.split(KEY_BEGIN)[1].split(KEY_END)[0] + KEY_END;
@@ -133,6 +141,7 @@ class PGP {
    */
   async parseUserIds(users, primaryKey, verifyDate = new Date()) {
     if (!users || !users.length) {
+      log.debug('PGP: Found key with no UIDs.');
       util.throw(400, 'Invalid PGP key: no user ID found');
     }
     // at least one user id must be valid, revoked or expired
@@ -151,7 +160,9 @@ class PGP {
               verified: false
             });
           }
-        } catch (e) { console.log(e); }
+        } catch (myerror) {
+            log.error('PGP: Failed to parse UIDs: ', myerror);
+        }
       }
     }
     return result;
@@ -180,15 +191,17 @@ class PGP {
     let srcKey;
     let dstKey;
     try {
+      log.debug('PGP: Parsing source key for update: %s', srcArmored);
       srcKey = await openpgp.readKey({armoredKey: srcArmored});
     } catch (srcErr) {
-      log.error('pgp', 'Failed to parse source PGP key for update:\n%s', srcArmored, srcErr);
+      log.error('PGP: Failed to parse source key for update: ', srcErr);
       util.throw(500, 'Failed to parse PGP key');
     }
     try {
+      log.debug('PGP: Parsing destination key for update: %s', dstArmored);
       dstKey = await openpgp.readKey({armoredKey: dstArmored});
     } catch (dstErr) {
-      log.error('pgp', 'Failed to parse destination PGP key for update:\n%s', dstArmored, dstErr);
+      log.error('PGP: Failed to parse destination PGP key for update: %s', dstErr);
       util.throw(500, 'Failed to parse PGP key');
     }
     await dstKey.update(srcKey);
