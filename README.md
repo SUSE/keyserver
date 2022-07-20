@@ -6,7 +6,38 @@ This is a fork of the [Mailvelope Keyserver](https://github.com/mailvelope/keyse
 
 #### Install for production
 
-To install this keyserver for production on an SLES or openSUSE system, download and install the package from [OBS](https://build.opensuse.org/package/show/home:crameleon/keyserver) - TO-DO: move to dedicated project in OBS.
+To install this keyserver for production on an SLES or openSUSE system add the OBS repository and install the package:
+
+```
+# SLES 15 SP4 or openSUSE Leap 15.4:
+zypper ar https://download.opensuse.org/repositories/home:/crameleon:/keyserver/15.4/home:crameleon:keyserver.repo
+
+# openSUSE Tumbleweed:
+https://download.opensuse.org/repositories/home:/crameleon:/keyserver/openSUSE_Tumbleweed/home:crameleon:keyserver.repo
+
+# openSUSE for ARM (not tested):
+https://download.opensuse.org/repositories/home:/crameleon:/keyserver/openSUSE_Factory_ARM/home:crameleon:keyserver.repo
+
+zypper in keyserver
+```
+
+After installation of the package you can configure the program by editing `/etc/sysconfig/keyserver` - you need to set at least the MongoDB connection details.
+
+Then the server can be controlled using `systemd`:
+
+```
+# Start the daemon
+rckeyserver start
+
+# Query the daemon status
+rckeyserver status
+
+# Enable the daemon for automatic start during boot
+systemctl enable keyserver
+
+# Stop the daemon
+rckeyserver stop
+```
 
 #### Install for development
 
